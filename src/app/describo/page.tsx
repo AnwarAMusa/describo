@@ -56,7 +56,7 @@ export default async function Describo() {
   ];
 
   return (
-    <section className="flex flex-col items-center">
+    <section className="flex flex-col">
       {/* <div className="py-4">
         <label className="relative inline-flex items-center me-5 cursor-pointer">
           <input type="checkbox" value="" className="sr-only peer" checked />
@@ -66,10 +66,10 @@ export default async function Describo() {
           </span>
         </label>
       </div> */}
-      <div>
+      <div className="pt-6">
         <Webcam />
       </div>
-      <div className="grow">
+      <div className="pt-6">
         <DescriboBox key="test" points={points} />
       </div>
     </section>

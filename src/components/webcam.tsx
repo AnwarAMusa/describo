@@ -1,31 +1,21 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React from "react";
+import Webcam from "react-webcam";
 
-export default function Webcam() {
-  const videoRef = useRef(null);
+export default function WebcamDisplay() {
+  const webcamRef = React.useRef(null);
+  const [imgSrc, setImgSrc] = React.useState(null);
 
-//   useEffect(() => {
-//     getVideo();
-//   }, [videoRef]);
+  const capture = React.useCallback(() => {
+    if(webcamRef != null && webcamRef.current != null) 
+    const imageSrc =  webcamRef.current.getScreenshot();
+    setImgSrc(imageSrc);
+  }, [webcamRef, setImgSrc]);
 
-//   const getVideo = () => {
-//     navigator.mediaDevices
-//       .getUserMedia({ video: { width: 300 } })
-//       .then((stream) => {
-//         let video = videoRef.current;
-//         video.srcObject = stream;
-//         video.play();
-//       })
-//       .catch((err) => {
-//         console.error("error:", err);
-//       });
-//   };
-
-//   return (
-//     <div>
-//       {" "}
-//       <video ref={videoRef} />{" "}
-//     </div>
-//   );
+  return (
+    <div>
+      <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
+    </div>
+  );
 }
