@@ -2,7 +2,15 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, copy your LLAVA token and paste it to the .env file
+
+Then, install all dependencies
+
+```bash
+npm i
+```
+
+Finally, run the application
 
 ```bash
 npm run dev
