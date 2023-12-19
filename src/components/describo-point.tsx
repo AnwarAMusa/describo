@@ -1,4 +1,4 @@
-"use client";
+import Image from "next/image";
 
 export default function DescriboPoint({ point }: any) {
   return (
@@ -8,7 +8,7 @@ export default function DescriboPoint({ point }: any) {
         {point.timestamp}
       </time>
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-        {point.name}
+        <img src={point.thumbnail} alt="thumbnail" width={50} height={50}/>
       </h3>
       <p className="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
         {point.description}

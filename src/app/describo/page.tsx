@@ -1,59 +1,47 @@
+"use client";
+
 import DescriboBox from "@/components/describo-box";
-import Webcam from "@/components/webcam";
-import { useState } from "react";
+import React, { useState } from "react";
+import Replicate from "replicate";
+import Webcam from "react-webcam";
 
-export default async function Describo() {
-  // const replicate = new Replicate({
-  //     auth: process.env.REPLICATE_API_TOKEN,
-  //   });
+export default function Describo() {
+  const replicate = new Replicate({
+    auth: process.env.REPLICATE_API_TOKEN,
+  });
 
-  //   const [currentView, setCurrentView] = useState(1);
+  const [points, setPoints] = useState([] as any);
 
-  //   const [llavaOutput, setLlavaOutput] = useState(new Object());
+  const webcamRef = React.useRef(null);
 
-  //   const [selectedFile, setSelectedFile] = useState();
-  //   const [isFilePicked, setIsFilePicked] = useState(false);
+  setTimeout(async () => {
+    if (webcamRef != null && webcamRef.current != null) {
+      const imageSrc = (webcamRef.current as Webcam).getScreenshot();
+      console.log(imageSrc);
+      const description = "";
 
-  //   async function changeHandler(event: any) {
+      // const description = await replicate.run(
+      //   "nateraw/video-llava:a494250c04691c458f57f2f8ef5785f25bc851e0c91fd349995081d4362322dd",
+      //   {
+      //     input: {
+      //       image_path: imageSrc,
+      //       // video_path: "",
+      //       text_prompt: "Describe the products in this media.",
+      //     },
+      //   }
+      // );
 
-  //     setSelectedFile(event.target.files[0]);
-  //     setIsFilePicked(true);
-
-  //     console.log(event.target.files[0]);
-
-  //     let headers = new Headers();
-
-  //     headers.append('Content-Type', 'application/json');
-  //     headers.append('Accept', 'application/json');
-  //     headers.append('Origin','http://localhost:3000');
-
-  //     const out = await replicate.run(
-  //       "nateraw/video-llava:a494250c04691c458f57f2f8ef5785f25bc851e0c91fd349995081d4362322dd",
-  //       {
-  //         input: {
-  //           // image_path: "<your_image_path>",
-  //           video_path: "https://replicate.delivery/pbxt/JvUeO366GYGoMEHxfSwn39LYgScZh6hKNj2EuJ17SXO6aGER/archery.mp4",
-  //           text_prompt: "Describe the products in this media.",
-  //         },
-  //       }
-  //     );
-  //     setLlavaOutput(out);
-  //   }
-
-  const points = [
-    {
-      key: "test0",
-      timestamp: "12/18/2024",
-      name: "Product",
-      description: "This is the description of this product",
-    },
-    {
-      key: "test2",
-      timestamp: "12/19/2024",
-      name: "Product 2",
-      description: "This is the description of this product",
-    },
-  ];
+      setPoints([
+        {
+          key: new Date().getMilliseconds() + "-describo-img",
+          timestamp: new Date().toISOString(),
+          thumbnail: imageSrc ?? "",
+          description: description ?? "",
+        },
+        ...points,
+      ]);
+    }
+  }, 10000);
 
   return (
     <section className="flex flex-col">
@@ -67,10 +55,10 @@ export default async function Describo() {
         </label>
       </div> */}
       <div className="pt-6">
-        <Webcam />
+        <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
       </div>
       <div className="pt-6">
-        <DescriboBox key="test" points={points} />
+        <DescriboBox key="describo-history" points={points} />
       </div>
     </section>
   );
