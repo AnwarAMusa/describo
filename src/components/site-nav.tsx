@@ -25,7 +25,7 @@ export default function SiteNav() {
             <Link
               href={siteRoute.href}
               className={`text-zinc-400 transition ${
-                pathname === siteRoute.href ? "text-green-100" : ""
+                pathname === siteRoute.href ? "text-green-200" : ""
               }`}
             >
               {siteRoute.label}
