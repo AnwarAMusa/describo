@@ -2,46 +2,60 @@
 
 import DescriboBox from "@/components/describo-box";
 import React, { useState } from "react";
-import Replicate from "replicate";
 import Webcam from "react-webcam";
+import { getProductDescrption } from "../actions";
+
+function base64ImageToBlob(str: any) {
+  // extract content type and base64 payload from original string
+  var pos = str.indexOf(";base64,");
+  var type = str.substring(5, pos);
+  var b64 = str.substr(pos + 8);
+
+  // decode base64
+  var imageContent = atob(b64);
+
+  // create an ArrayBuffer and a view (as unsigned 8-bit)
+  var buffer = new ArrayBuffer(imageContent.length);
+  var view = new Uint8Array(buffer);
+
+  // fill the view, using the decoded base64
+  for (var n = 0; n < imageContent.length; n++) {
+    view[n] = imageContent.charCodeAt(n);
+  }
+
+  // convert ArrayBuffer to Blob
+  var blob = new Blob([buffer], { type: type });
+
+  return blob;
+}
 
 export default function Describo() {
-  const replicate = new Replicate({
-    auth: process.env.REPLICATE_API_TOKEN,
-  });
-
   const [points, setPoints] = useState([] as any);
 
   const webcamRef = React.useRef(null);
 
   setTimeout(async () => {
     if (webcamRef != null && webcamRef.current != null) {
-      const imageSrc = (webcamRef.current as Webcam).getScreenshot();
-      console.log(imageSrc);
-      const description = "";
+      const image64 = (webcamRef.current as Webcam).getScreenshot();
 
-      // const description = await replicate.run(
-      //   "nateraw/video-llava:a494250c04691c458f57f2f8ef5785f25bc851e0c91fd349995081d4362322dd",
-      //   {
-      //     input: {
-      //       image_path: imageSrc,
-      //       // video_path: "",
-      //       text_prompt: "Describe the products in this media.",
-      //     },
-      //   }
-      // );
+      if (image64 != null) {
+        const imagePath = URL.createObjectURL(base64ImageToBlob(image64));
 
-      setPoints([
-        {
-          key: new Date().getMilliseconds() + "-describo-img",
-          timestamp: new Date().toISOString(),
-          thumbnail: imageSrc ?? "",
-          description: description ?? "",
-        },
-        ...points,
-      ]);
+        let description = getProductDescrption(imagePath);
+
+        console.log(description);
+        setPoints([
+          {
+            key: new Date().valueOf() + "-describo-img",
+            timestamp: new Date().toISOString(),
+            thumbnail: image64 ?? "",
+            description: description ?? "",
+          },
+          ...points,
+        ]);
+      }
     }
-  }, 10000);
+  }, 3000);
 
   return (
     <section className="flex flex-col">
